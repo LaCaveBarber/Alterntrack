@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AlternTrack v2 — Mohamed Traouli</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #f5f2ed;
+  --surface: #ffffff;
+  --surface2: #f0ece5;
+  --border: #ddd8cf;
+  --ink: #1a1714;
+  --ink2: #5a5550;
+  --accent: #c8522a;
+  --accent-light: #f5e8e2;
+  --green: #2a7a4b;
+  --green-light: #e3f2ea;
+  --gold: #b8860b;
+  --gold-light: #fdf6e3;
+  --blue: #1e4d8c;
+  --blue-light: #e8eef8;
+  --red-light: #fde8e8;
+  --red: #c0392b;
+  --font-head: 'Playfair Display', serif;
+  --font-body: 'Epilogue', sans-serif;
+  --radius: 12px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.07);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 14px; min-height: 100vh; }
+
+/* ── NAV ── */
+nav {
+  background: var(--ink); color: #fff;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2rem; height: 56px; position: sticky; top: 0; z-index: 200;
+}
+.logo { font-family: var(--font-head); font-size: 1.2rem; letter-spacing: 0.5px; }
+.logo em { color: var(--accent); font-style: normal; }
+.nav-tabs { display: flex; gap: 2px; }
+.nav-tab {
+  background: none; border: none; color: rgba(255,255,255,0.55);
+  font-family: var(--font-body); font-size: 0.8rem; font-weight: 500;
+  padding: 0 1rem; height: 56px; cursor: pointer; transition: all 0.2s;
+  border-bottom: 2px solid transparent; letter-spacing: 0.3px;
+}
+.nav-tab:hover { color: rgba(255,255,255,0.85); }
+.nav-tab.active { color: #fff; border-bottom-color: var(--accent); }
+.nav-user { font-size: 0.75rem; color: rgba(255,255,255,0.45); font-weight: 300; }
+
+/* ── PAGES ── */
+.page { display: none; max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; animation: fadeUp 0.25s ease; }
+.page.active { display: block; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── HEADINGS ── */
+.page-title { font-family: var(--font-head); font-size: 1.8rem; font-weight: 700; margin-bottom: 0.2rem; }
+.page-sub { color: var(--ink2); font-size: 0.82rem; font-weight: 300; margin-bottom: 1.75rem; }
+
+/* ── CARD ── */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow);
+}
+.card + .card { margin-top: 1rem; }
+.card-title { font-family: var(--font-head); font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
+
+/* ── FORM ELEMENTS ── */
+label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink2); margin-bottom: 0.35rem; }
+input, select, textarea {
+  width: 100%; background: var(--surface2); border: 1px solid var(--border);
+  color: var(--ink); font-family: var(--font-body); font-size: 0.85rem;
+  padding: 0.6rem 0.85rem; border-radius: 8px; outline: none; transition: border-color 0.2s;
+  resize: vertical;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--accent); background: #fff; }
+select option { background: #fff; }
+.field { margin-bottom: 1rem; }
+.field:last-child { margin-bottom: 0; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+.span2 { grid-column: 1/-1; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  font-family: var(--font-body); font-size: 0.82rem; font-weight: 600;
+  padding: 0.6rem 1.25rem; border-radius: 8px; cursor: pointer;
+  border: none; transition: all 0.18s; white-space: nowrap; letter-spacing: 0.2px;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: #a84020; }
+.btn-secondary { background: var(--surface2); color: var(--ink); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-green { background: var(--green); color: #fff; }
+.btn-green:hover { background: #1f5c37; }
+.btn-dark { background: var(--ink); color: #fff; }
+.btn-dark:hover { background: #2d2a26; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.25rem; }
+
+/* ── BADGES ── */
+.badge {
+  display: inline-flex; align-items: center;
+  font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.6rem;
+  border-radius: 100px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.badge-green { background: var(--green-light); color: var(--green); }
+.badge-gold { background: var(--gold-light); color: var(--gold); }
+.badge-blue { background: var(--blue-light); color: var(--blue); }
+.badge-red { background: var(--red-light); color: var(--red); }
+.badge-grey { background: var(--surface2); color: var(--ink2); }
+.badge-accent { background: var(--accent-light); color: var(--accent); }
+
+/* ── SPINNER ── */
+.spin { display:inline-block; width:14px; height:14px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 0.6s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.spin-dark { border-color: rgba(0,0,0,0.15); border-top-color: var(--ink); }
+
+/* ────────────────────────────────────────────
+   PAGE 1 — POSTULER (centre de commande)
+──────────────────────────────────────────── */
+.apply-hero {
+  background: var(--ink); color: #fff; border-radius: var(--radius);
+  padding: 2rem; margin-bottom: 1.5rem; position: relative; overflow: hidden;
+}
+.apply-hero::before {
+  content: ''; position: absolute; right: -40px; top: -40px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,82,42,0.3), transparent 70%);
+}
+.apply-hero h2 { font-family: var(--font-head); font-size: 1.4rem; margin-bottom: 0.4rem; }
+.apply-hero p { color: rgba(255,255,255,0.6); font-size: 0.82rem; font-weight: 300; }
+
+.steps-row { display: flex; gap: 0; margin-bottom: 1.5rem; }
+.step {
+  flex: 1; background: var(--surface); border: 1px solid var(--border);
+  padding: 1rem; position: relative; transition: all 0.2s;
+}
+.step:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+.step:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+.step:not(:last-child) { border-right: none; }
+.step.active-step { background: var(--accent-light); border-color: var(--accent); z-index: 1; }
+.step-num { font-family: var(--font-head); font-size: 1.4rem; font-weight: 900; color: var(--border); line-height: 1; margin-bottom: 0.2rem; }
+.step.active-step .step-num { color: var(--accent); }
+.step-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink2); }
+.step.active-step .step-label { color: var(--accent); }
+
+.url-row { display: flex; gap: 0.75rem; align-items: flex-end; }
+.url-row input { flex: 1; }
+
+.result-panel {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.5rem; margin-top: 1rem;
+}
+.result-panel.hidden { display: none; }
+
+/* CV PREVIEW */
+.cv-preview-wrap { margin-top: 1.25rem; }
+.cv-sheet {
+  background: #fff; border: 1px solid #ccc; border-radius: 6px;
+  max-width: 720px; margin: 0 auto; padding: 36px 44px; font-size: 11.5px;
+  line-height: 1.5; font-family: 'Epilogue', sans-serif; color: #1a1714;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+}
+.cv-sheet h1 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; margin: 0; letter-spacing: -0.5px; }
+.cv-sheet .cv-title-line { color: #5a5550; font-size: 10.5px; font-weight: 500; margin-top: 2px; letter-spacing: 0.5px; text-transform: uppercase; }
+.cv-sheet .cv-contact { font-size: 10px; color: #5a5550; margin-top: 5px; }
+.cv-sheet hr { border: none; border-top: 1.5px solid #1a1714; margin: 12px 0 10px; }
+.cv-sheet .cv-section { margin-bottom: 14px; }
+.cv-sheet .cv-section-title {
+  font-family: 'Playfair Display', serif; font-size: 11.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px; color: #c8522a;
+  border-bottom: 0.5px solid #ddd8cf; padding-bottom: 3px; margin-bottom: 8px;
+}
+.cv-sheet .cv-exp-head { display: flex; justify-content: space-between; align-items: baseline; }
+.cv-sheet .cv-exp-title { font-weight: 600; font-size: 11.5px; }
+.cv-sheet .cv-exp-date { font-size: 10px; color: #5a5550; white-space: nowrap; }
+.cv-sheet .cv-exp-company { font-size: 10.5px; color: #5a5550; font-style: italic; margin-bottom: 3px; }
+.cv-sheet .cv-exp-tag { font-size: 9.5px; font-weight: 700; color: #fff; background: #1a1714; padding: 1px 6px; border-radius: 3px; margin-left: 6px; vertical-align: middle; }
+.cv-sheet ul { padding-left: 14px; }
+.cv-sheet li { margin-bottom: 2px; font-size: 11px; }
+.cv-sheet .cv-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.cv-sheet .cv-skill-cat { font-weight: 600; font-size: 10.5px; margin-bottom: 2px; }
+.cv-sheet .cv-skill-val { font-size: 10.5px; color: #3a3734; }
+.cv-sheet .cv-lang-row { display: flex; gap: 16px; flex-wrap: wrap; font-size: 10.5px; }
+.cv-sheet .cv-lang-item strong { font-weight: 600; }
+.ats-keywords { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+.ats-kw { background: var(--accent-light); color: var(--accent); font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.55rem; border-radius: 4px; }
+
+/* LM PREVIEW */
+.lm-sheet {
+  background: #fff; border: 1px solid #ccc; border-radius: 6px;
+  max-width: 720px; margin: 1.5rem auto 0; padding: 48px 56px;
+  font-family: 'Epilogue', sans-serif; font-size: 11.5px; line-height: 1.8;
+  color: #1a1714; box-shadow: 0 4px 24px rgba(0,0,0,0.12); white-space: pre-wrap;
+}
+.lm-sheet .lm-header { margin-bottom: 28px; }
+.lm-sheet .lm-sender { font-weight: 600; font-size: 12px; }
+.lm-sheet .lm-sender-details { font-size: 10.5px; color: #5a5550; margin-top: 2px; }
+.lm-sheet .lm-recipient { margin-top: 20px; }
+.lm-sheet .lm-date { text-align: right; color: #5a5550; font-size: 10.5px; margin-top: 12px; }
+.lm-sheet .lm-subject { font-weight: 700; font-size: 11.5px; margin: 20px 0 20px; }
+.lm-sheet .lm-body { white-space: pre-wrap; line-height: 1.8; }
+.lm-sheet .lm-sign { margin-top: 32px; }
+
+/* ────────────────────────────────────────────
+   PAGE 2 — OFFRES
+──────────────────────────────────────────── */
+.offres-topbar { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; margin-bottom: 1.25rem; }
+.offres-topbar input { max-width: 240px; }
+.filter-pills { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.pill {
+  background: var(--surface); border: 1px solid var(--border); color: var(--ink2);
+  font-size: 0.75rem; font-weight: 500; padding: 0.35rem 0.9rem; border-radius: 100px;
+  cursor: pointer; transition: all 0.18s;
+}
+.pill.active, .pill:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+.offres-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+.offer-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 1.25rem; transition: all 0.2s; cursor: default;
+}
+.offer-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); border-color: var(--accent); }
+.offer-card-top { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+.offer-logo { font-size: 1.6rem; line-height: 1; }
+.offer-name { font-family: var(--font-head); font-size: 0.95rem; font-weight: 700; }
+.offer-sector { font-size: 0.72rem; color: var(--ink2); }
+.offer-links { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.85rem; }
+.offer-link {
+  font-size: 0.72rem; font-weight: 600; padding: 0.3rem 0.7rem;
+  border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;
+  transition: all 0.18s; border: 1px solid var(--border); color: var(--ink2); background: var(--surface2);
+}
+.offer-link:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+.offer-link.main { background: var(--accent); color: #fff; border-color: var(--accent); }
+.offer-link.main:hover { background: #a84020; }
+.offer-link.apply { background: var(--green); color: #fff; border-color: var(--green); }
+.offer-link.apply:hover { background: #1f5c37; }
+
+/* ────────────────────────────────────────────
+   PAGE 3 — SUIVI
+──────────────────────────────────────────── */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1.5rem; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
+.stat-n { font-family: var(--font-head); font-size: 2rem; font-weight: 900; line-height: 1; }
+.stat-l { font-size: 0.72rem; color: var(--ink2); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.25rem; }
+.table-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+thead { background: var(--surface2); }
+th { padding: 0.75rem 1rem; text-align: left; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--ink2); }
+td { padding: 0.75rem 1rem; border-top: 1px solid var(--border); font-size: 0.82rem; vertical-align: middle; }
+tr:hover td { background: #faf9f7; }
+.del-btn { background: none; border: none; color: var(--border); cursor: pointer; font-size: 0.9rem; transition: color 0.2s; }
+.del-btn:hover { color: var(--red); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 999;
+  background: var(--ink); color: #fff; padding: 0.8rem 1.25rem;
+  border-radius: 10px; font-size: 0.82rem; font-weight: 500;
+  box-shadow: var(--shadow-lg); transform: translateY(80px); opacity: 0;
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* ── DIVIDER ── */
+.divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+/* ── LOADING OVERLAY ── */
+.loading-msg { display: flex; align-items: center; gap: 0.75rem; color: var(--ink2); font-size: 0.85rem; padding: 1.5rem 0; }
+
+@media (max-width: 700px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .steps-row { flex-direction: column; }
+  .step:first-child, .step:last-child { border-radius: var(--radius); }
+  .step:not(:last-child) { border-right: 1px solid var(--border); border-bottom: none; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .cv-sheet, .lm-sheet { padding: 20px 16px; }
+  nav { padding: 0 1rem; }
+  .nav-user { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Altern<em>Track</em></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('postuler', this)">🚀 Postuler</button>
+    <button class="nav-tab" onclick="showPage('offres', this)">🔍 Offres</button>
+    <button class="nav-tab" onclick="showPage('suivi', this)">📋 Suivi</button>
+  </div>
+  <div class="nav-user">Mohamed Traouli · BUT GEA GEMA</div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     PAGE POSTULER
+══════════════════════════════════════════ -->
+<div class="page active" id="page-postuler">
+  <div class="apply-hero">
+    <h2>Centre de candidature</h2>
+    <p>Colle le lien d'une offre → le CV s'adapte automatiquement + lettre de motivation générée → tu postules en 1 clic</p>
+  </div>
+
+  <div class="steps-row">
+    <div class="step active-step" id="step1"><div class="step-num">1</div><div class="step-label">Lien de l'offre</div></div>
+    <div class="step" id="step2"><div class="step-num">2</div><div class="step-label">Analyse IA</div></div>
+    <div class="step" id="step3"><div class="step-num">3</div><div class="step-label">CV adapté + LM</div></div>
+    <div class="step" id="step4"><div class="step-num">4</div><div class="step-label">Postuler</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📎 Lien de l'offre d'alternance</div>
+    <div class="url-row">
+      <div style="flex:1">
+        <label>URL de l'offre (Indeed, LinkedIn, site entreprise…)</label>
+        <input id="offer-url" placeholder="https://fr.indeed.com/viewjob?jk=... ou colle n'importe quel lien d'offre" />
+      </div>
+      <button class="btn btn-primary" onclick="analyzeOffer()" id="btn-analyze">✨ Analyser l'offre</button>
+    </div>
+    <div style="margin-top:0.75rem; font-size:0.78rem; color:var(--ink2)">
+      💡 Tu peux aussi décrire l'offre manuellement ci-dessous si le lien ne fonctionne pas
+    </div>
+    <div style="margin-top:0.75rem;">
+      <label>Ou décris l'offre manuellement (titre, entreprise, missions, compétences requises…)</label>
+      <textarea id="offer-manual" rows="4" placeholder="Ex: Alternant Contrôle de Gestion chez BNP Paribas — missions: reporting mensuel, analyse budgétaire, tableaux de bord Excel — requis: Excel avancé, rigueur, Bac+3 gestion..."></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="generateFromManual()" id="btn-manual">✨ Générer depuis la description</button>
+    </div>
+  </div>
+
+  <!-- RESULT PANEL -->
+  <div class="result-panel hidden" id="result-panel">
+    <div id="offer-info-box" style="margin-bottom:1.25rem;"></div>
+
+    <!-- TABS CV / LM -->
+    <div style="display:flex; gap:0.5rem; border-bottom:1px solid var(--border); margin-bottom:1.25rem;">
+      <button class="btn btn-secondary" id="tab-cv-btn" onclick="switchTab('cv')" style="border-radius:8px 8px 0 0; border-bottom:2px solid var(--accent); color:var(--accent);">📄 CV adapté</button>
+      <button class="btn btn-secondary" id="tab-lm-btn" onclick="switchTab('lm')" style="border-radius:8px 8px 0 0;">✉️ Lettre de motivation</button>
+    </div>
+
+    <!-- CV TAB -->
+    <div id="tab-cv">
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
+        <div>
+          <div style="font-size:0.78rem; color:var(--ink2);">Mots-clés ATS injectés :</div>
+          <div class="ats-keywords" id="ats-kw-display"></div>
+        </div>
+        <div style="display:flex;gap:0.5rem;">
+          <button class="btn btn-secondary" onclick="copyCV()">📋 Copier texte</button>
+          <button class="btn btn-dark" onclick="printCV()">🖨 Imprimer / PDF</button>
+        </div>
+      </div>
+      <div class="cv-preview-wrap" id="cv-output"></div>
+    </div>
+
+    <!-- LM TAB -->
+    <div id="tab-lm" style="display:none;">
+      <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-bottom:1rem;">
+        <button class="btn btn-secondary" onclick="copyLM()">📋 Copier</button>
+        <button class="btn btn-dark" onclick="printLM()">🖨 Imprimer / PDF</button>
+      </div>
+      <div id="lm-output"></div>
+    </div>
+
+    <hr class="divider"/>
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+      <div style="font-size:0.82rem; color:var(--ink2);">Tout est prêt ? Enregistre ta candidature dans le suivi.</div>
+      <button class="btn btn-green" onclick="markApplied()" id="btn-apply-confirm">✅ J'ai postulé — enregistrer dans le suivi</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE OFFRES
+══════════════════════════════════════════ -->
+<div class="page" id="page-offres">
+  <div class="page-title">Offres d'alternance</div>
+  <div class="page-sub">CAC 40 + grandes entreprises · Licence / Bac+3 · Finance, Marketing, RH, Conseil, Gestion</div>
+
+  <div class="offres-topbar">
+    <input id="search-offres" placeholder="🔎 Rechercher…" oninput="renderOffres()" style="max-width:220px;"/>
+    <div class="filter-pills" id="filter-pills">
+      <button class="pill active" data-f="all" onclick="setFilter('all',this)">Toutes</button>
+      <button class="pill" data-f="finance" onclick="setFilter('finance',this)">💰 Finance</button>
+      <button class="pill" data-f="marketing" onclick="setFilter('marketing',this)">📣 Marketing</button>
+      <button class="pill" data-f="hr" onclick="setFilter('hr',this)">👥 RH</button>
+      <button class="pill" data-f="conseil" onclick="setFilter('conseil',this)">🧠 Conseil</button>
+      <button class="pill" data-f="gestion" onclick="setFilter('gestion',this)">📊 Gestion</button>
+    </div>
+  </div>
+  <div class="offres-grid" id="offres-grid"></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE SUIVI
+══════════════════════════════════════════ -->
+<div class="page" id="page-suivi">
+  <div class="page-title">Tableau de suivi</div>
+  <div class="page-sub">Toutes tes candidatures · mis à jour automatiquement</div>
+  <div class="stats-grid" id="stats-grid"></div>
+
+  <!-- Manual add -->
+  <div class="card" style="margin-bottom:1rem;">
+    <div class="card-title">+ Ajouter manuellement</div>
+    <div class="grid-3">
+      <div class="field"><label>Entreprise</label><input id="m-company" placeholder="BNP Paribas"/></div>
+      <div class="field"><label>Poste</label><input id="m-poste" placeholder="Alternant Finance"/></div>
+      <div class="field"><label>Date</label><input id="m-date" type="date"/></div>
+      <div class="field"><label>Statut</label>
+        <select id="m-status">
+          <option value="attente">En attente</option>
+          <option value="envoye">Envoyé</option>
+          <option value="relance">Relancé</option>
+          <option value="entretien">Entretien</option>
+          <option value="refuse">Refusé</option>
+        </select>
+      </div>
+      <div class="field span2"><label>Note</label><input id="m-note" placeholder="Contact RH, lien offre, remarques…"/></div>
+    </div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="addManualRow()">Ajouter</button></div>
+  </div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Entreprise</th><th>Poste</th><th>Date</th><th>Statut</th><th>Note</th><th></th>
+        </tr>
+      </thead>
+      <tbody id="suivi-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════════ SCRIPT ══════════════════════════════════════════ -->
+<script>
+// ── BASE CV DATA (Mohamed Traouli) ──
+const BASE_CV = {
+  nom: "Mohamed Traouli",
+  titre: "Étudiant BUT GEA – Parcours GEMA | Candidat Alternance 12 mois",
+  contact: "Sèvres (92) · 06 14 78 70 27 · Traouli.mohamed@yahoo.com · linkedin.com/in/mohamed-traouli",
+  profil: "Étudiant en BUT GEA (Parcours GEMA), je combine une formation pluridisciplinaire en gestion et management avec des expériences concrètes en commerce, marketing et finance — dont un stage international à la CCIFL (Laos). Rigoureux, autonome et opérationnel, je recherche une alternance de 12 mois à partir de septembre 2026.",
+  experiences: [
+    {
+      titre: "Stagiaire Marketing & Communication",
+      date: "Janv. – Mars 2026",
+      entreprise: "Chambre de Commerce et d'Industrie Française au Laos (CCIFL) — Vientiane, Laos",
+      tag: "STAGE",
+      bullets: [
+        "Organisation de 3 à 5 événements B2B (20 à 60 invités) : coordination logistique, gestion des intervenants et suivi post-événement.",
+        "Création et mise à jour du site web de la CCIFL ainsi que rédaction et envoi de la newsletter aux entreprises membres.",
+        "Prospection d'entreprises membres et partenaires en contexte interculturel franco-laotien."
+      ]
+    },
+    {
+      titre: "Conseiller de Vente",
+      date: "Nov. 2024 – En cours",
+      entreprise: "Petit Bateau — Galeries Lafayette Haussmann — Paris (75)",
+      tag: "CDI ÉTUDIANT",
+      bullets: [
+        "Conseil auprès d'une clientèle internationale dans un point de vente à ~8 000 € de CA journalier.",
+        "Taux de fidélisation de 85 % via une approche client personnalisée et l'enrollment au programme membres.",
+        "Gestion des stocks, encaissement et merchandising."
+      ]
+    },
+    {
+      titre: "Assistant de Direction Commerciale",
+      date: "Août 2025",
+      entreprise: "Izicrea — Villejust (91)",
+      tag: "CDD",
+      bullets: [
+        "14 clients signés en 1 mois : qualification des prospects, gestion des flux entrants et closing.",
+        "Suivi des KPI commerciaux et reporting hebdomadaire."
+      ]
+    },
+    {
+      titre: "Stagiaire — Direction Financière & Commerciale",
+      date: "Mars 2025",
+      entreprise: "Izicrea — Villejust (91)",
+      tag: "STAGE",
+      bullets: [
+        "Pilotage de la trésorerie : lettrage, facturation et suivi des créances.",
+        "Automatisation des flux de données financières, réduction des traitements manuels."
+      ]
+    }
+  ],
+  formation: [
+    {
+      diplome: "BUT Gestion des Entreprises et des Administrations — Parcours GEMA",
+      periode: "Sept. 2024 – En cours · Bac+3 visé 2027",
+      ecole: "IUT Paris Rives de Seine — Université Paris Cité — Paris (75)",
+      detail: "Parcours GEMA (Gestion Entrepreneuriale et Management d'Activité) — formation pluridisciplinaire orientée entreprise.",
+      modules: "Comptabilité · Contrôle de gestion · Trésorerie · Droit des affaires · Marketing · Stratégie · Management · Outils de décision.",
+      extra: "SAÉ (Situations d'Apprentissage et d'Évaluation) et projets tuteurés en conditions réelles."
+    },
+    {
+      diplome: "Baccalauréat Technologique STMG — Spécialité Gestion & Finance",
+      periode: "2021 – 2024 · Mention Assez Bien",
+      ecole: "Lycée Jean-Pierre Vernant — Sèvres (92)",
+      detail: "", modules: "", extra: ""
+    }
+  ],
+  engagements: [
+    { role: "Resp. Pôle Partenariat — BDE Game Over", type: "Bénévolat · Sept. 2025 – En cours", detail: "Négociation de contrats de sponsoring et prospection de partenaires." },
+    { role: "Coordinateur Logistique — La Distrib'", type: "Bénévolat · Nov. 2024 – En cours", detail: "Coordination des maraudes étudiantes et gestion logistique." }
+  ],
+  competences: {
+    gestion: "Analyse financière · Trésorerie · Contrôle de gestion · Comptabilité",
+    commerce: "Développement commercial · Communication digitale · KPI & Reporting",
+    outils: "Pack Office · Google Workspace · Excel (bases)",
+    langues: [
+      { lang: "Français", niveau: "Natif" },
+      { lang: "Anglais", niveau: "B2" },
+      { lang: "Arabe", niveau: "Compréhension avancée" }
+    ],
+    divers: "Permis B (depuis 2 ans)"
+  },
+  reference: "Chambre de Commerce et d'Industrie Française au Laos (CCIFL), Vientiane, Laos — Contact disponible sur demande"
+};
+
+// Current offer context
+let currentOffer = null;
+
+// ── API CALL ──
+async function callClaude(systemPrompt, userPrompt) {
+  const resp = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1000,
+      system: systemPrompt,
+      messages: [{ role: "user", content: userPrompt }]
+    })
+  });
+  const data = await resp.json();
+  return data.content?.map(b => b.text||'').join('') || '';
+}
+
+// ── ANALYZE OFFER (via URL fetch attempt + manual fallback) ──
+async function analyzeOffer() {
+  const url = document.getElementById('offer-url').value.trim();
+  if (!url) { toast('Colle un lien d\'offre d\'abord !'); return; }
+  setStep(2);
+  const btn = document.getElementById('btn-analyze');
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Analyse en cours…';
+  document.getElementById('result-panel').classList.add('hidden');
+
+  // We'll pass the URL and ask Claude to infer/simulate what the offer likely contains
+  const systemPrompt = `Tu es un expert ATS et recrutement en France. L'utilisateur te donne un lien d'offre d'alternance. 
+Tu dois retourner UNIQUEMENT un JSON valide (sans markdown, sans backticks) avec cette structure exacte:
+{
+  "company": "nom entreprise",
+  "poste": "titre du poste",
+  "sector": "finance|marketing|hr|conseil|gestion|autre",
+  "keywords": ["mot1","mot2","mot3",...max 12 mots-clés ATS],
+  "missions": ["mission 1","mission 2","mission 3"],
+  "requirements": ["compétence 1","compétence 2"],
+  "profil_summary": "résumé 1 phrase du profil recherché",
+  "accent_cv": "finance|marketing|commerce|rh|gestion",
+  "cv_tweaks": ["ajustement 1 à faire sur le CV","ajustement 2",...max 4]
+}
+Déduis intelligemment depuis le lien fourni (domaine, paramètres URL) et tes connaissances sur les offres d'alternance typiques de ce type d'entreprise.`;
+
+  try {
+    const raw = await callClaude(systemPrompt, `Lien offre: ${url}\nDéduis le contenu probable de cette offre d'alternance et retourne le JSON.`);
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const offer = JSON.parse(clean);
+    offer.url = url;
+    offer.source = 'url';
+    processOffer(offer);
+  } catch(e) {
+    toast('Erreur d\'analyse — essaie la description manuelle');
+    setStep(1);
+  }
+  btn.disabled = false; btn.innerHTML = '✨ Analyser l\'offre';
+}
+
+async function generateFromManual() {
+  const manual = document.getElementById('offer-manual').value.trim();
+  if (!manual) { toast('Décris l\'offre d\'abord !'); return; }
+  setStep(2);
+  const btn = document.getElementById('btn-manual');
+  btn.disabled = true; btn.innerHTML = '<span class="spin spin-dark"></span> Analyse…';
+  document.getElementById('result-panel').classList.add('hidden');
+
+  const systemPrompt = `Tu es un expert ATS et recrutement en France. Retourne UNIQUEMENT un JSON valide sans markdown:
+{
+  "company": "nom entreprise",
+  "poste": "titre poste",
+  "sector": "finance|marketing|hr|conseil|gestion|autre",
+  "keywords": ["mot-clé ATS 1",...max 12],
+  "missions": ["mission 1","mission 2","mission 3"],
+  "requirements": ["compétence 1","compétence 2"],
+  "profil_summary": "résumé 1 phrase",
+  "accent_cv": "finance|marketing|commerce|rh|gestion",
+  "cv_tweaks": ["ajustement 1",...max 4]
+}`;
+
+  try {
+    const raw = await callClaude(systemPrompt, `Description de l'offre: ${manual}`);
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const offer = JSON.parse(clean);
+    offer.url = '';
+    offer.source = 'manual';
+    processOffer(offer);
+  } catch(e) {
+    toast('Erreur — réessaie'); setStep(1);
+  }
+  btn.disabled = false; btn.innerHTML = '✨ Générer depuis la description';
+}
+
+async function processOffer(offer) {
+  currentOffer = offer;
+  setStep(3);
+
+  // Show offer info box
+  document.getElementById('offer-info-box').innerHTML = `
+    <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap; padding:1rem; background:var(--surface2); border-radius:10px;">
+      <div>
+        <div style="font-family:var(--font-head); font-size:1rem; font-weight:700;">${offer.poste || 'Poste non précisé'}</div>
+        <div style="font-size:0.8rem; color:var(--ink2);">${offer.company || 'Entreprise'} · <span class="badge badge-grey">${offer.sector}</span></div>
+      </div>
+      <div style="flex:1; min-width:200px; font-size:0.78rem; color:var(--ink2);">${offer.profil_summary || ''}</div>
+    </div>`;
+
+  // ATS keywords display
+  document.getElementById('ats-kw-display').innerHTML = (offer.keywords||[]).map(k=>`<span class="ats-kw">${k}</span>`).join('');
+
+  // Show loading
+  document.getElementById('result-panel').classList.remove('hidden');
+  document.getElementById('cv-output').innerHTML = '<div class="loading-msg"><span class="spin spin-dark"></span> Optimisation du CV en cours…</div>';
+  document.getElementById('lm-output').innerHTML = '<div class="loading-msg"><span class="spin spin-dark"></span> Rédaction de la lettre…</div>';
+
+  // Generate both in parallel
+  await Promise.all([generateOptimizedCV(offer), generateLM(offer)]);
+  setStep(4);
+}
+
+// ── GENERATE OPTIMIZED CV ──
+async function generateOptimizedCV(offer) {
+  const systemPrompt = `Tu es un expert CV et ATS en France. Tu dois optimiser le CV d'un candidat pour une offre spécifique.
+RÈGLE ABSOLUE: Tu ne modifies QUE les éléments suivants, dans cet ordre de priorité:
+1. La phrase d'accroche/profil (reformuler pour matcher le poste et l'entreprise)
+2. L'ordre des bullets sous chaque expérience (mettre en avant ceux qui matchent les mots-clés)
+3. Les intitulés de compétences (reformuler avec les mots-clés ATS exacts de l'offre)
+4. NE JAMAIS inventer des expériences, diplômes ou compétences qui ne sont pas dans le CV de base
+5. Retourner UNIQUEMENT un JSON valide sans markdown avec cette structure:
+{
+  "profil": "nouvelle accroche profil optimisée",
+  "exp_bullets_override": {
+    "0": ["bullet optimisé 1","bullet 2","bullet 3"],
+    "1": ["bullet optimisé 1","bullet 2","bullet 3"],
+    "2": ["..."],
+    "3": ["..."]
+  },
+  "competences_gestion": "compétences gestion reformulées avec mots-clés",
+  "competences_commerce": "compétences commerce reformulées avec mots-clés",
+  "competences_outils": "outils reformulés avec mots-clés"
+}`;
+
+  const cvJson = JSON.stringify({
+    profil: BASE_CV.profil,
+    experiences: BASE_CV.experiences.map(e => ({ titre: e.titre, bullets: e.bullets })),
+    competences: BASE_CV.competences
+  });
+
+  try {
+    const raw = await callClaude(systemPrompt, 
+      `Offre: ${offer.poste} chez ${offer.company}\nMots-clés ATS: ${(offer.keywords||[]).join(', ')}\nMissions: ${(offer.missions||[]).join('; ')}\nRequis: ${(offer.requirements||[]).join('; ')}\n\nCV de base:\n${cvJson}`);
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const tweaks = JSON.parse(clean);
+    renderCVSheet(tweaks, offer);
+  } catch(e) {
+    renderCVSheet({}, offer); // fallback: render base CV
+  }
+}
+
+// ── RENDER CV SHEET ──
+function renderCVSheet(tweaks, offer) {
+  const cv = BASE_CV;
+  const profil = tweaks.profil || cv.profil;
+  const compGestion = tweaks.competences_gestion || cv.competences.gestion;
+  const compCommerce = tweaks.competences_commerce || cv.competences.commerce;
+  const compOutils = tweaks.competences_outils || cv.competences.outils;
+
+  const expHtml = cv.experiences.map((exp, i) => {
+    const bullets = (tweaks.exp_bullets_override && tweaks.exp_bullets_override[String(i)]) || exp.bullets;
+    return `
+      <div style="margin-bottom:10px;">
+        <div class="cv-exp-head">
+          <div class="cv-exp-title">${exp.titre} <span class="cv-exp-tag">${exp.tag}</span></div>
+          <div class="cv-exp-date">${exp.date}</div>
+        </div>
+        <div class="cv-exp-company">${exp.entreprise}</div>
+        <ul>${bullets.map(b=>`<li>${b}</li>`).join('')}</ul>
+      </div>`;
+  }).join('');
+
+  const formHtml = cv.formation.map(f => `
+    <div style="margin-bottom:8px;">
+      <div class="cv-exp-head">
+        <div class="cv-exp-title">${f.diplome}</div>
+        <div class="cv-exp-date">${f.periode}</div>
+      </div>
+      <div class="cv-exp-company">${f.ecole}</div>
+      ${f.detail ? `<div style="font-size:10.5px;margin-top:2px">${f.detail}</div>` : ''}
+      ${f.modules ? `<div style="font-size:10.5px;color:#5a5550">${f.modules}</div>` : ''}
+      ${f.extra ? `<div style="font-size:10.5px;color:#5a5550">${f.extra}</div>` : ''}
+    </div>`).join('');
+
+  const engHtml = cv.engagements.map(e => `
+    <div style="margin-bottom:6px;">
+      <div style="font-weight:600;font-size:11px;">${e.role}</div>
+      <div style="font-size:10px;color:#5a5550;">${e.type}</div>
+      <div style="font-size:10.5px;">${e.detail}</div>
+    </div>`).join('');
+
+  const langHtml = cv.competences.langues.map(l=>`<div class="cv-lang-item"><strong>${l.lang}</strong> — ${l.niveau}</div>`).join('');
+
+  const html = `
+    <div class="cv-sheet" id="cv-sheet-content">
+      <h1>${cv.nom}</h1>
+      <div class="cv-title-line">${cv.titre}</div>
+      <div class="cv-contact">${cv.contact}</div>
+      <hr/>
+
+      <div class="cv-section">
+        <div class="cv-section-title">Profil</div>
+        <p style="font-size:11px">${profil}</p>
+      </div>
+
+      <div class="cv-section">
+        <div class="cv-section-title">Expériences professionnelles</div>
+        ${expHtml}
+      </div>
+
+      <div class="cv-two-col">
+        <div>
+          <div class="cv-section">
+            <div class="cv-section-title">Formation</div>
+            ${formHtml}
+          </div>
+          <div class="cv-section">
+            <div class="cv-section-title">Référence</div>
+            <div style="font-size:10.5px">${cv.reference}</div>
+          </div>
+        </div>
+        <div>
+          <div class="cv-section">
+            <div class="cv-section-title">Engagements</div>
+            ${engHtml}
+          </div>
+          <div class="cv-section">
+            <div class="cv-section-title">Compétences & Langues</div>
+            <div class="cv-skill-cat">Gestion & Finance</div>
+            <div class="cv-skill-val" style="margin-bottom:6px">${compGestion}</div>
+            <div class="cv-skill-cat">Commerce & Marketing</div>
+            <div class="cv-skill-val" style="margin-bottom:6px">${compCommerce}</div>
+            <div class="cv-skill-cat">Outils</div>
+            <div class="cv-skill-val" style="margin-bottom:6px">${compOutils}</div>
+            <div class="cv-skill-cat">Langues</div>
+            <div class="cv-lang-row">${langHtml}</div>
+            <div style="margin-top:6px;font-size:10.5px;color:#5a5550">${cv.competences.divers}</div>
+          </div>
+        </div>
+      </div>
+
+      <hr style="margin-top:8px;margin-bottom:6px;border-top:0.5px solid #ccc"/>
+      <div style="font-size:9.5px;color:#9a9590;text-align:center">${cv.nom} · 06 14 78 70 27 · Traouli.mohamed@yahoo.com · linkedin.com/in/mohamed-traouli</div>
+    </div>`;
+
+  document.getElementById('cv-output').innerHTML = html;
+}
+
+// ── GENERATE LM ──
+async function generateLM(offer) {
+  const today = new Date().toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
+  const systemPrompt = `Tu es expert en recrutement et rédaction professionnelle en France.
+Génère une lettre de motivation parfaite, authentique et personnalisée. 
+Retourne UNIQUEMENT le texte de la lettre, sans balises, sans explication, juste le corps de la lettre depuis "Madame, Monsieur" jusqu'à la formule de politesse incluse (max 280 mots). Ne mets PAS l'en-tête expéditeur ni la date, uniquement le corps.`;
+
+  const cvContext = `Candidat: Mohamed Traouli, étudiant BUT GEA GEMA à l'IUT Paris Rives de Seine.
+Expériences clés: Stage CCIFL Laos (marketing/événementiel B2B), Conseiller de vente Petit Bateau Galeries Lafayette (CA 8000€/jour, fidélisation 85%), Assistant de direction commerciale Izicrea (14 clients en 1 mois), Stage finance Izicrea (trésorerie, automatisation).
+Formation: BUT GEA GEMA – Comptabilité, Contrôle de gestion, Marketing, Stratégie, Management.
+Langues: Français natif, Anglais B2, Arabe.
+Engagements: BDE (partenariats), bénévolat solidaire.`;
+
+  try {
+    const body = await callClaude(systemPrompt,
+      `Poste: ${offer.poste}\nEntreprise: ${offer.company}\nSecteur: ${offer.sector}\nMissions: ${(offer.missions||[]).join('; ')}\nMots-clés ATS: ${(offer.keywords||[]).join(', ')}\n\nProfil candidat:\n${cvContext}`);
+
+    const lmHtml = `
+      <div class="lm-sheet" id="lm-sheet-content">
+        <div class="lm-header">
+          <div class="lm-sender">${BASE_CV.nom}</div>
+          <div class="lm-sender-details">Sèvres (92) · 06 14 78 70 27 · Traouli.mohamed@yahoo.com<br/>linkedin.com/in/mohamed-traouli</div>
+          <div class="lm-date">${today}</div>
+          <div class="lm-recipient" style="margin-top:16px; font-size:11.5px">
+            <strong>Service Recrutement</strong><br/>
+            ${offer.company || '[Entreprise]'}
+          </div>
+          <div class="lm-subject">Objet : Candidature au poste d'${offer.poste || 'Alternant(e)'} — Alternance 12 mois</div>
+        </div>
+        <div class="lm-body">${body}</div>
+        <div class="lm-sign" style="font-size:11.5px"><br/>${BASE_CV.nom}</div>
+      </div>`;
+    document.getElementById('lm-output').innerHTML = lmHtml;
+  } catch(e) {
+    document.getElementById('lm-output').innerHTML = '<p style="color:var(--ink2);padding:1rem">Erreur de génération. Réessaie.</p>';
+  }
+}
+
+// ── TABS ──
+function switchTab(tab) {
+  document.getElementById('tab-cv').style.display = tab==='cv' ? '' : 'none';
+  document.getElementById('tab-lm').style.display = tab==='lm' ? '' : 'none';
+  document.getElementById('tab-cv-btn').style.borderBottom = tab==='cv' ? '2px solid var(--accent)' : '';
+  document.getElementById('tab-cv-btn').style.color = tab==='cv' ? 'var(--accent)' : '';
+  document.getElementById('tab-lm-btn').style.borderBottom = tab==='lm' ? '2px solid var(--accent)' : '';
+  document.getElementById('tab-lm-btn').style.color = tab==='lm' ? 'var(--accent)' : '';
+}
+
+// ── COPY / PRINT ──
+function copyCV() {
+  const el = document.getElementById('cv-sheet-content');
+  if (!el) return;
+  navigator.clipboard.writeText(el.innerText);
+  toast('CV copié !');
+}
+function copyLM() {
+  const el = document.getElementById('lm-sheet-content');
+  if (!el) return;
+  navigator.clipboard.writeText(el.innerText);
+  toast('Lettre copiée !');
+}
+function printCV() {
+  const content = document.getElementById('cv-sheet-content')?.outerHTML;
+  if (!content) return;
+  printSheet(content, 'CV Mohamed Traouli');
+}
+function printLM() {
+  const content = document.getElementById('lm-sheet-content')?.outerHTML;
+  if (!content) return;
+  printSheet(content, 'Lettre de Motivation');
+}
+function printSheet(content, title) {
+  const w = window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <style>
+      body{margin:0;padding:0;background:#fff;font-family:'Epilogue',sans-serif;}
+      @media print{body{margin:0;}@page{margin:10mm;}}
+      .cv-sheet,.lm-sheet{max-width:none;box-shadow:none;border:none;padding:28px 32px;font-size:11px;line-height:1.55;color:#1a1714;}
+      .cv-sheet h1{font-family:'Playfair Display',serif;font-size:21px;font-weight:900;margin:0;}
+      .cv-title-line{color:#5a5550;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;}
+      .cv-contact{font-size:9.5px;color:#5a5550;margin-top:4px;}
+      hr{border:none;border-top:1.5px solid #1a1714;margin:10px 0 8px;}
+      .cv-section{margin-bottom:12px;}
+      .cv-section-title{font-family:'Playfair Display',serif;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c8522a;border-bottom:0.5px solid #ddd;padding-bottom:2px;margin-bottom:6px;}
+      .cv-exp-head{display:flex;justify-content:space-between;align-items:baseline;}
+      .cv-exp-title{font-weight:600;font-size:11px;}
+      .cv-exp-date{font-size:9.5px;color:#5a5550;white-space:nowrap;}
+      .cv-exp-company{font-size:10px;color:#5a5550;font-style:italic;margin-bottom:2px;}
+      .cv-exp-tag{font-size:8.5px;font-weight:700;color:#fff;background:#1a1714;padding:1px 5px;border-radius:3px;margin-left:5px;}
+      ul{padding-left:12px;}li{margin-bottom:1px;font-size:10.5px;}
+      .cv-two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+      .cv-skill-cat{font-weight:600;font-size:10px;margin-bottom:1px;}
+      .cv-skill-val{font-size:10px;color:#3a3734;margin-bottom:5px;}
+      .cv-lang-row{display:flex;gap:12px;flex-wrap:wrap;font-size:10px;}
+      .cv-lang-item strong{font-weight:600;}
+      .lm-sheet{padding:36px 44px;font-size:11.5px;line-height:1.8;}
+      .lm-sender{font-weight:600;font-size:12px;}
+      .lm-sender-details,.lm-date{font-size:10.5px;color:#5a5550;}
+      .lm-subject{font-weight:700;margin:18px 0;}
+      .lm-body{white-space:pre-wrap;line-height:1.8;}
+    </style></head><body>${content}</body></html>`);
+  w.document.close();
+  w.focus();
+  setTimeout(() => { w.print(); }, 600);
+}
+
+// ── MARK APPLIED ──
+function markApplied() {
+  if (!currentOffer) return;
+  const today = new Date().toISOString().split('T')[0];
+  addSuiviRow({
+    company: currentOffer.company || '—',
+    poste: currentOffer.poste || '—',
+    date: today,
+    status: 'envoye',
+    note: currentOffer.url ? `Offre: ${currentOffer.url}` : 'Candidature envoyée'
+  });
+  toast('✅ Candidature enregistrée dans le suivi !');
+  setStep(4);
+  document.getElementById('btn-apply-confirm').textContent = '✅ Enregistré !';
+  document.getElementById('btn-apply-confirm').disabled = true;
+  setTimeout(() => {
+    document.getElementById('btn-apply-confirm').textContent = '✅ J\'ai postulé — enregistrer dans le suivi';
+    document.getElementById('btn-apply-confirm').disabled = false;
+  }, 3000);
+}
+
+// ── STEP INDICATOR ──
+function setStep(n) {
+  for (let i=1;i<=4;i++) {
+    document.getElementById('step'+i).classList.toggle('active-step', i===n);
+  }
+}
+
+// ══════════════════════
+// OFFRES DATA & RENDER
+// ══════════════════════
+const COMPANIES = [
+  { name:"BNP Paribas", sector:"finance", logo:"🏦", tags:["Finance","Banque"],
+    career:"https://careers.bnpparibas.com/fr/nos-offres/?contract_type=apprenticeship",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+finance+bnp+paribas&jt=internship",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+finance+bnp+paribas",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+finance+bnp" },
+  { name:"Société Générale", sector:"finance", logo:"🏦", tags:["Finance","Banque"],
+    career:"https://careers.societegenerale.com/fr/offres-emploi?type=Alternance",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+soci%C3%A9t%C3%A9+g%C3%A9n%C3%A9rale",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+société+générale",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+soci%C3%A9t%C3%A9+g%C3%A9n%C3%A9rale" },
+  { name:"AXA", sector:"finance", logo:"🛡", tags:["Finance","Assurance"],
+    career:"https://careers.axa.com/fr/search?f_PP=APPRENTICESHIP",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+axa+finance",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+axa+finance",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+axa" },
+  { name:"Crédit Agricole", sector:"finance", logo:"🌾", tags:["Finance","Banque"],
+    career:"https://jobs.credit-agricole.com/fr/offres?type=apprenticeship",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+cr%C3%A9dit+agricole",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+crédit+agricole",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+cr%C3%A9dit+agricole" },
+  { name:"LVMH", sector:"finance", logo:"💎", tags:["Finance","Luxe"],
+    career:"https://www.lvmh.fr/rejoindre-lvmh/offres-demploi/?jtype=apprenticeship",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+lvmh+finance+gestion",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+lvmh+finance",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+lvmh+finance" },
+  { name:"TotalEnergies", sector:"finance", logo:"⛽", tags:["Finance","Énergie"],
+    career:"https://jobs.totalenergies.com/fr/offres?contract=apprenticeship",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+totalenergies+finance",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+totalenergies+finance",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+totalenergies+finance" },
+  { name:"L'Oréal", sector:"marketing", logo:"💄", tags:["Marketing","Beauté"],
+    career:"https://jobs.loreal.com/fr_FR/jobs?apprentice=true",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+loreal+marketing",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+loreal+marketing",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+loreal+marketing" },
+  { name:"Publicis", sector:"marketing", logo:"📢", tags:["Marketing","Communication"],
+    career:"https://careers.publicisgroupe.com/fr/offres?contract=apprenticeship",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+publicis+marketing",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+publicis+marketing",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+publicis+communication" },
+  { name:"Danone", sector:"marketing", logo:"🥛", tags:["Marketing","Agroalimentaire"],
+    career:"https://danone.jobs/fr/offres?type=apprenticeship",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+danone+marketing",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+danone+marketing",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+danone+marketing" },
+  { name:"Sephora", sector:"marketing", logo:"🌸", tags:["Marketing","Retail"],
+    career:"https://www.sephora.fr/careers/offres?type=alternance",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+sephora+marketing",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+sephora+marketing",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+sephora+marketing" },
+  { name:"Carrefour", sector:"marketing", logo:"🛒", tags:["Marketing","Distribution"],
+    career:"https://recrutement.carrefour.com/offres?type=alternance",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+carrefour+marketing",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+carrefour+marketing",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+carrefour+marketing" },
+  { name:"Capgemini", sector:"hr", logo:"💼", tags:["RH","Conseil"],
+    career:"https://www.capgemini.com/fr-fr/carrieres/offres/?jobType=Alternance",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+capgemini+rh",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+capgemini+rh",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+capgemini+rh" },
+  { name:"Sodexo", sector:"hr", logo:"🍽", tags:["RH","Services"],
+    career:"https://careers.sodexo.com/fr/jobs?contract=alternance",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+sodexo+rh",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+sodexo+rh",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+sodexo+rh" },
+  { name:"Michelin", sector:"hr", logo:"🚗", tags:["RH","Industrie"],
+    career:"https://jobs.michelin.com/fr/offres?type=alternance",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+michelin+rh",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+michelin+rh",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+michelin+rh" },
+  { name:"Accenture", sector:"conseil", logo:"🔷", tags:["Conseil","Stratégie"],
+    career:"https://www.accenture.com/fr-fr/careers/jobsearch?jt=Alternance",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+accenture+conseil",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+accenture",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+accenture" },
+  { name:"Deloitte", sector:"conseil", logo:"🟩", tags:["Conseil","Audit"],
+    career:"https://www.deloitte.com/fr/fr/pages/careers/articles/nos-offres.html",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+deloitte",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+deloitte",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+deloitte" },
+  { name:"KPMG", sector:"conseil", logo:"🔵", tags:["Conseil","Audit"],
+    career:"https://kpmg.com/fr/fr/home/careers.html",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+kpmg",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+kpmg",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+kpmg" },
+  { name:"PwC France", sector:"conseil", logo:"🟠", tags:["Conseil","Audit"],
+    career:"https://jobs.pwc.fr/offres?type=alternance",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+pwc",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+pwc",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+pwc" },
+  { name:"EDF", sector:"gestion", logo:"⚡", tags:["Gestion","Énergie"],
+    career:"https://recrutement.edf.com/nos-offres?contrat=alternance",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+edf+gestion",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+edf+gestion",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+edf+gestion" },
+  { name:"SNCF", sector:"gestion", logo:"🚄", tags:["Gestion","Transports"],
+    career:"https://emploi.sncf.com/nos-offres?type=alternance",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+sncf+gestion+finance",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+sncf+gestion",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+sncf+gestion" },
+  { name:"Orange", sector:"gestion", logo:"🟠", tags:["Gestion","Télécom"],
+    career:"https://jobs.orange.com/fr/recherche?type=Alternance",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+orange+gestion",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+orange+gestion",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+orange+gestion" },
+  { name:"Airbus", sector:"gestion", logo:"✈️", tags:["Gestion","Aéronautique"],
+    career:"https://www.airbus.com/en/careers/search-and-apply?contract=Apprenticeship",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+airbus+gestion+finance",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+airbus+gestion",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+airbus+gestion" },
+  { name:"Saint-Gobain", sector:"gestion", logo:"🏗", tags:["Gestion","Industrie"],
+    career:"https://jobs.saint-gobain.com/fr/offres?type=alternance",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+saint-gobain+gestion",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+saint+gobain+gestion",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+saint-gobain+gestion" },
+  { name:"Veolia", sector:"hr", logo:"♻️", tags:["RH","Environnement"],
+    career:"https://www.veolia.com/fr/careers/nos-offres?type=alternance",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+veolia+rh",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+veolia+rh",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+veolia+rh" },
+  { name:"McKinsey France", sector:"conseil", logo:"📈", tags:["Conseil","Stratégie"],
+    career:"https://www.mckinsey.com/fr/careers",
+    indeed:"https://fr.indeed.com/jobs?q=alternance+mckinsey",
+    linkedin:"https://www.linkedin.com/jobs/search/?keywords=alternance+mckinsey",
+    hellowork:"https://www.hellowork.com/fr-fr/emploi/recherche.html?k=alternance+conseil+strategie" },
+];
+
+let activeFilter = 'all';
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderOffres();
+}
+function renderOffres() {
+  const q = (document.getElementById('search-offres')?.value||'').toLowerCase();
+  const list = COMPANIES.filter(c => {
+    const matchF = activeFilter === 'all' || c.sector === activeFilter;
+    const matchQ = !q || c.name.toLowerCase().includes(q);
+    return matchF && matchQ;
+  });
+  document.getElementById('offres-grid').innerHTML = list.map(c => `
+    <div class="offer-card">
+      <div class="offer-card-top">
+        <div class="offer-logo">${c.logo}</div>
+        <div><div class="offer-name">${c.name}</div><div class="offer-sector">${c.tags.join(' · ')}</div></div>
+      </div>
+      <div class="offer-links">
+        <a class="offer-link main" href="${c.career}" target="_blank">🌐 Carrières</a>
+        <a class="offer-link" href="${c.indeed}" target="_blank">🔍 Indeed</a>
+        <a class="offer-link" href="${c.linkedin}" target="_blank">💼 LinkedIn</a>
+        <a class="offer-link" href="${c.hellowork}" target="_blank">👋 HelloWork</a>
+      </div>
+    </div>`).join('');
+}
+renderOffres();
+
+// ══════════════════════
+// SUPABASE CONFIG
+// ══════════════════════
+const SUPABASE_URL = 'https://uzgtuyubqljzaxtudgxm.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_FULccYCshucGt3JdKGqjcQ_lZJfD7Sl';
+
+async function sbFetch(path, options = {}) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': options.prefer || '',
+      ...options.headers
+    },
+    ...options
+  });
+  if (!res.ok) throw new Error(await res.text());
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
+// ══════════════════════
+// SUIVI (Supabase)
+// ══════════════════════
+let suiviRows = [];
+
+const STATUS_LABELS = { envoye:'Envoyé', relance:'Relancé', entretien:'Entretien', refuse:'Refusé', attente:'En attente' };
+const STATUS_CLASS  = { envoye:'badge-blue', relance:'badge-gold', entretien:'badge-green', refuse:'badge-red', attente:'badge-grey' };
+
+async function loadSuivi() {
+  try {
+    const tbody = document.getElementById('suivi-tbody');
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--ink2);padding:2rem"><span class="spin spin-dark"></span> Chargement…</td></tr>';
+    const data = await sbFetch('candidatures?order=created_at.desc');
+    suiviRows = data || [];
+    renderSuivi();
+  } catch(e) {
+    console.error('Supabase load error:', e);
+    toast('⚠️ Erreur de connexion à la base de données');
+    renderSuivi();
+  }
+}
+
+async function addSuiviRow(row) {
+  try {
+    const inserted = await sbFetch('candidatures', {
+      method: 'POST',
+      prefer: 'return=representation',
+      body: JSON.stringify({
+        company: row.company,
+        poste: row.poste,
+        date: row.date,
+        status: row.status,
+        note: row.note
+      })
+    });
+    if (inserted && inserted[0]) suiviRows.unshift(inserted[0]);
+    else suiviRows.unshift(row);
+    renderSuivi();
+  } catch(e) {
+    console.error('Insert error:', e);
+    toast('⚠️ Erreur d\'enregistrement');
+  }
+}
+
+async function deleteRow(id, i) {
+  try {
+    await sbFetch(`candidatures?id=eq.${id}`, { method: 'DELETE' });
+    suiviRows.splice(i, 1);
+    renderSuivi();
+    toast('Supprimé');
+  } catch(e) {
+    toast('⚠️ Erreur de suppression');
+  }
+}
+
+async function updateStatus(id, i, newStatus) {
+  try {
+    await sbFetch(`candidatures?id=eq.${id}`, {
+      method: 'PATCH',
+      prefer: 'return=representation',
+      body: JSON.stringify({ status: newStatus })
+    });
+    suiviRows[i].status = newStatus;
+    renderSuivi();
+  } catch(e) {
+    toast('⚠️ Erreur mise à jour');
+  }
+}
+
+function addManualRow() {
+  const company = document.getElementById('m-company').value.trim();
+  if (!company) { toast('Indique l\'entreprise'); return; }
+  addSuiviRow({
+    company,
+    poste: document.getElementById('m-poste').value.trim(),
+    date: document.getElementById('m-date').value,
+    status: document.getElementById('m-status').value,
+    note: document.getElementById('m-note').value.trim()
+  });
+  ['m-company','m-poste','m-date','m-note'].forEach(id => document.getElementById(id).value='');
+  toast('✅ Candidature enregistrée !');
+}
+
+function renderSuivi() {
+  const counts = { total:suiviRows.length, entretien:0, refuse:0, envoye:0 };
+  suiviRows.forEach(r => {
+    if (r.status==='entretien') counts.entretien++;
+    if (r.status==='refuse') counts.refuse++;
+    if (r.status==='envoye'||r.status==='relance'||r.status==='attente') counts.envoye++;
+  });
+
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card"><div class="stat-n" style="color:var(--accent)">${counts.total}</div><div class="stat-l">Total</div></div>
+    <div class="stat-card"><div class="stat-n" style="color:var(--blue)">${counts.envoye}</div><div class="stat-l">En cours</div></div>
+    <div class="stat-card"><div class="stat-n" style="color:var(--green)">${counts.entretien}</div><div class="stat-l">Entretiens</div></div>
+    <div class="stat-card"><div class="stat-n" style="color:var(--red)">${counts.refuse}</div><div class="stat-l">Refus</div></div>`;
+
+  const tbody = document.getElementById('suivi-tbody');
+  if (!suiviRows.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--ink2);padding:2.5rem">Aucune candidature · postule depuis "Postuler" ou ajoute manuellement</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = suiviRows.map((r, i) => `
+    <tr>
+      <td style="color:var(--ink2);font-size:0.75rem">${i+1}</td>
+      <td><strong>${r.company||'—'}</strong></td>
+      <td>${r.poste||'—'}</td>
+      <td style="color:var(--ink2);font-size:0.78rem">${r.date||'—'}</td>
+      <td>
+        <select onchange="updateStatus('${r.id}',${i},this.value)"
+          style="background:transparent;border:none;font-family:var(--font-body);font-size:0.78rem;cursor:pointer;color:inherit;padding:0;">
+          ${Object.entries(STATUS_LABELS).map(([v,l])=>`<option value="${v}" ${r.status===v?'selected':''}>${l}</option>`).join('')}
+        </select>
+      </td>
+      <td style="color:var(--ink2);font-size:0.78rem;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.note||'—'}</td>
+      <td><button class="del-btn" onclick="deleteRow('${r.id}',${i})">✕</button></td>
+    </tr>`).join('');
+}
+
+// Charge les données au démarrage
+loadSuivi();
+
+// ══════════════════════
+// TOAST
+// ══════════════════════
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ══════════════════════
+// PAGE NAVIGATION
+// ══════════════════════
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  else document.querySelectorAll('.nav-tab').forEach(t => { if(t.textContent.toLowerCase().includes(id)) t.classList.add('active'); });
+}
+</script>
+</body>
+</html>
